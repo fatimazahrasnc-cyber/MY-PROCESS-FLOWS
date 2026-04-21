@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Instructions — Process Flowchart Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;900i&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:        #0F0E17;
+    --ink-mid:    #3D3C52;
+    --ink-soft:   #7C7A96;
+    --bg:         #F7F6F3;
+    --surface:    #FFFFFF;
+    --accent:     #6C3FB5;
+    --accent-2:   #1A56DB;
+    --accent-3:   #0D9373;
+    --amber:      #D97706;
+    --red:        #C0392B;
+    --border:     #E4E2F0;
+    --radius:     12px;
+    --radius-sm:  8px;
+    --shadow:     0 2px 16px rgba(15,14,23,0.07);
+    --shadow-lg:  0 8px 48px rgba(15,14,23,0.12);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── Sidebar nav ── */
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: 230px;
+    background: var(--ink);
+    padding: 36px 0 24px;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    overflow-y: auto;
+  }
+  .sidebar-logo {
+    padding: 0 24px 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 20px;
+  }
+  .sidebar-logo .mark {
+    width: 36px; height: 36px;
+    background: var(--accent);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  .sidebar-logo h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    color: white;
+    line-height: 1.3;
+    font-weight: 700;
+  }
+  .sidebar-logo p {
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    font-family: 'DM Mono', monospace;
+    margin-top: 3px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .nav-section {
+    padding: 0 24px;
+    margin-bottom: 6px;
+  }
+  .nav-section-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.25);
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 8px;
+    margin-top: 16px;
+  }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    color: rgba(255,255,255,0.55);
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 500;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+  }
+  .nav-link:hover {
+    background: rgba(255,255,255,0.07);
+    color: white;
+  }
+  .nav-link.active {
+    background: var(--accent);
+    color: white;
+  }
+  .nav-icon { font-size: 14px; width: 18px; text-align: center; }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 16px 24px 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+    font-family: 'DM Mono', monospace;
+    line-height: 1.6;
+  }
+
+  /* ── Main content ── */
+  .main {
+    margin-left: 230px;
+    min-height: 100vh;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--ink);
+    padding: 64px 64px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(108,63,181,0.3) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 200px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(26,86,219,0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(108,63,181,0.25);
+    border: 1px solid rgba(108,63,181,0.4);
+    color: #C4B2F0;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 44px;
+    font-weight: 900;
+    color: white;
+    line-height: 1.15;
+    max-width: 580px;
+    margin-bottom: 18px;
+    letter-spacing: -1px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: #C4B2F0;
+  }
+  .hero p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.55);
+    max-width: 520px;
+    line-height: 1.7;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 28px;
+    margin-top: 36px;
+  }
+  .hero-stat {
+    text-align: left;
+  }
+  .hero-stat .val {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+    line-height: 1;
+  }
+  .hero-stat .lbl {
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    font-family: 'DM Mono', monospace;
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* ── Content area ── */
+  .content {
+    padding: 56px 64px;
+    max-width: 900px;
+  }
+
+  /* ── Section ── */
+  .section {
+    margin-bottom: 60px;
+  }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 16px;
+    line-height: 1.25;
+    letter-spacing: -0.5px;
+  }
+  .section p {
+    color: var(--ink-mid);
+    margin-bottom: 16px;
+    line-height: 1.75;
+  }
+
+  /* ── Overview cards ── */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .overview-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow);
+    transition: transform 0.18s, box-shadow 0.18s;
+  }
+  .overview-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+  }
+  .overview-card .oc-icon {
+    font-size: 26px;
+    margin-bottom: 12px;
+  }
+  .overview-card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .overview-card p {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* ── Process: how to describe a flow ── */
+  .steps-list {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .step-item {
+    display: flex;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .step-item:last-child { border-bottom: none; }
+  .step-num-circle {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+    margin-top: 2px;
+  }
+  .step-body h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 5px;
+  }
+  .step-body p {
+    font-size: 12.5px;
+    color: var(--ink-mid);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* ── Prompt template box ── */
+  .prompt-box {
+    background: var(--ink);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: 24px;
+    box-shadow: var(--shadow-lg);
+  }
+  .prompt-box-header {
+    background: rgba(255,255,255,0.05);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .prompt-box-header span {
+    font-family: 'DM Mono', monospace;
+    font-size: 10.5px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .prompt-dots { display: flex; gap: 5px; }
+  .prompt-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+  }
+  .prompt-body {
+    padding: 24px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+  .prompt-body .highlight { color: #C4B2F0; font-weight: 500; }
+  .prompt-body .muted     { color: rgba(255,255,255,0.3); }
+  .prompt-body .green     { color: #6EE7B7; }
+
+  /* ── Example prompt card ── */
+  .example-block {
+    margin-top: 24px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1.5px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+  .example-block-header {
+    background: var(--accent);
+    padding: 12px 20px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: white;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .example-block-body {
+    background: var(--surface);
+    padding: 20px 24px;
+    font-size: 13px;
+    color: var(--ink-mid);
+    line-height: 1.75;
+  }
+
+  /* ── Rules table ── */
+  .rules-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 13px;
+    background: var(--surface);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .rules-table th {
+    background: var(--ink);
+    color: rgba(255,255,255,0.7);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 500;
+  }
+  .rules-table td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink-mid);
+    line-height: 1.55;
+    vertical-align: top;
+  }
+  .rules-table tr:last-child td { border-bottom: none; }
+  .rules-table tr:hover td { background: var(--bg); }
+  .rules-table .tag {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .tag-req  { background: #EDE7F6; color: var(--accent); }
+  .tag-opt  { background: #E8F5E9; color: #1B5E20; }
+  .tag-tip  { background: #FFF3E0; color: #E65100; }
+
+  /* ── Color mapping section ── */
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .color-swatch {
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1.5px solid var(--border);
+  }
+  .swatch-top {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+  .swatch-body {
+    background: var(--surface);
+    padding: 10px 12px;
+  }
+  .swatch-role {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .swatch-desc {
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── Tip callout ── */
+  .tip {
+    background: #FFFBEB;
+    border: 1.5px solid #FCD34D;
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    font-size: 13px;
+    color: #78350F;
+    line-height: 1.6;
+  }
+  .tip-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  .info {
+    background: #EBF2FF;
+    border: 1.5px solid #93C5FD;
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    font-size: 13px;
+    color: #1E3A8A;
+    line-height: 1.6;
+  }
+
+  /* ── What I will deliver ── */
+  .deliverable-list {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .deliverable-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--ink-mid);
+    box-shadow: var(--shadow);
+  }
+  .deliverable-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .deliverable-item strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  /* ── Quick reference ── */
+  .quick-ref {
+    background: var(--ink);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-top: 24px;
+    color: rgba(255,255,255,0.75);
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  .quick-ref h3 {
+    font-family: 'Playfair Display', serif;
+    color: white;
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  .quick-ref ul {
+    padding-left: 0;
+    list-style: none;
+  }
+  .quick-ref li {
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+  .quick-ref li::before {
+    content: '→';
+    color: #C4B2F0;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .quick-ref li:last-child { border-bottom: none; }
+
+  /* ── Print ── */
+  @media print {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .hero { padding: 40px; }
+    .content { padding: 32px 40px; }
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .overview-card { animation: fadeUp 0.4s ease both; }
+  .overview-card:nth-child(1) { animation-delay: 0.05s; }
+  .overview-card:nth-child(2) { animation-delay: 0.10s; }
+  .overview-card:nth-child(3) { animation-delay: 0.15s; }
+  .overview-card:nth-child(4) { animation-delay: 0.20s; }
+</style>
+</head>
+<body>
+
+<!-- ── Sidebar ── -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="mark">🔄</div>
+    <h2>Flowchart Project</h2>
+    <p>Instructions v1.0</p>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Getting Started</div>
+    <a href="#overview"   class="nav-link active"><span class="nav-icon">📋</span> Overview</a>
+    <a href="#how-it-works" class="nav-link"><span class="nav-icon">⚙️</span> How It Works</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Your Input</div>
+    <a href="#what-to-tell" class="nav-link"><span class="nav-icon">💬</span> What to Tell Me</a>
+    <a href="#prompt-template" class="nav-link"><span class="nav-icon">📝</span> Prompt Template</a>
+    <a href="#example-prompt"  class="nav-link"><span class="nav-icon">💡</span> Example Prompt</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Output</div>
+    <a href="#deliverables" class="nav-link"><span class="nav-icon">📦</span> What You Get</a>
+    <a href="#design"       class="nav-link"><span class="nav-icon">🎨</span> Design System</a>
+    <a href="#rules"        class="nav-link"><span class="nav-icon">📏</span> Rules & Standards</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Reference</div>
+    <a href="#quick-ref" class="nav-link"><span class="nav-icon">⚡</span> Quick Reference</a>
+  </div>
+
+  <div class="sidebar-footer">
+    HTML Process Flowchart<br>Project Instructions<br>Rev. 1.0
+  </div>
+</nav>
+
+<!-- ── Main ── -->
+<div class="main">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge">🔄 &nbsp; Process Flowchart Generator</div>
+    <h1>Turn any process into a <em>beautiful</em> HTML flowchart</h1>
+    <p>Describe any business process — with roles, steps, decisions, and rules — and receive a fully designed, color-coded, browser-ready HTML flowchart file.</p>
+    <div class="hero-meta">
+      <div class="hero-stat"><div class="val">HTML</div><div class="lbl">Output format</div></div>
+      <div class="hero-stat"><div class="val">∞</div><div class="lbl">Roles supported</div></div>
+      <div class="hero-stat"><div class="val">1</div><div class="lbl">Prompt needed</div></div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- OVERVIEW -->
+    <div class="section" id="overview">
+      <div class="section-label">01 — Overview</div>
+      <h2>What is this project?</h2>
+      <p>This is an ongoing project where you describe any business or operational process in plain language, and I generate a fully designed, color-coded HTML flowchart — exactly like the Purchase Department flowchart — that you can open in any browser, print, or share.</p>
+      <p>No design tools needed. No formatting effort on your part. Just describe the process clearly and I handle the rest.</p>
+
+      <div class="overview-grid">
+        <div class="overview-card">
+          <div class="oc-icon">🏢</div>
+          <h3>Any Department</h3>
+          <p>Works for any business process — finance, HR, operations, sales, IT, compliance, or custom workflows.</p>
+        </div>
+        <div class="overview-card">
+          <div class="oc-icon">👥</div>
+          <h3>Multi-Role Flows</h3>
+          <p>Each person or team gets their own color-coded swim lane so responsibilities are immediately clear.</p>
+        </div>
+        <div class="overview-card">
+          <div class="oc-icon">🔀</div>
+          <h3>Decisions & Loops</h3>
+          <p>Approval gates, yes/no branches, revision loops, and conditional paths are all handled automatically.</p>
+        </div>
+        <div class="overview-card">
+          <div class="oc-icon">📄</div>
+          <h3>Editable HTML File</h3>
+          <p>You receive a single .html file — open in browser, print to PDF, or edit the source code as needed.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div class="section" id="how-it-works">
+      <div class="section-label">02 — How It Works</div>
+      <h2>Simple three-step cycle</h2>
+      <p>The workflow is straightforward. You describe, I build, you receive a file.</p>
+
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-num-circle">1</div>
+          <div class="step-body">
+            <h4>You describe the process</h4>
+            <p>Tell me the process in plain language — who does what, in what order, what decisions are made, and any special rules or notes. No special format required; conversational descriptions work perfectly.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num-circle">2</div>
+          <div class="step-body">
+            <h4>I design the flowchart</h4>
+            <p>I assign each role a swim lane with a unique color, map out every step and decision, add cross-lane connectors, highlight important rules, and build a clean HTML file with professional typography and hover animations.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num-circle">3</div>
+          <div class="step-body">
+            <h4>You download the file</h4>
+            <p>You receive a ready-to-use .html file. Open it in any browser. Print it. Share it. Edit the text directly in the file if needed. You can also ask me to make corrections or additions at any time.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHAT TO TELL ME -->
+    <div class="section" id="what-to-tell">
+      <div class="section-label">03 — Your Input</div>
+      <h2>What to tell me</h2>
+      <p>For the best result, your description should cover the following information. The more clearly you describe it, the more accurate the flowchart will be.</p>
+
+      <table class="rules-table">
+        <thead>
+          <tr>
+            <th>Information</th>
+            <th>What to Include</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>People / Roles</strong></td>
+            <td>Names or titles of every person or team involved. E.g. "Raza (Purchaser)", "Mr. Shahid (Business Partner)", "Store Manager".</td>
+            <td><span class="tag tag-req">Required</span></td>
+          </tr>
+          <tr>
+            <td><strong>Steps in order</strong></td>
+            <td>What happens first, second, third — and who does each step. Even a rough narrative order is fine.</td>
+            <td><span class="tag tag-req">Required</span></td>
+          </tr>
+          <tr>
+            <td><strong>Decision points</strong></td>
+            <td>Any yes/no gates or approval steps. E.g. "If approved, proceed. If not, return to Raza for revision."</td>
+            <td><span class="tag tag-req">Required</span></td>
+          </tr>
+          <tr>
+            <td><strong>Special rules or notes</strong></td>
+            <td>Important constraints, warnings, or exceptions. E.g. "Rate on invoice may differ from PO rate."</td>
+            <td><span class="tag tag-opt">Optional</span></td>
+          </tr>
+          <tr>
+            <td><strong>Reports or outputs</strong></td>
+            <td>Any reports, documents, or data that the process produces. E.g. daily report, discrepancy log, filed invoice.</td>
+            <td><span class="tag tag-opt">Optional</span></td>
+          </tr>
+          <tr>
+            <td><strong>Process name</strong></td>
+            <td>What to call the process — used as the flowchart title. E.g. "Sales Order Process", "HR Onboarding".</td>
+            <td><span class="tag tag-tip">Recommended</span></td>
+          </tr>
+          <tr>
+            <td><strong>Department name</strong></td>
+            <td>Which department or area this belongs to. Used in the header. E.g. "Accounts Department".</td>
+            <td><span class="tag tag-tip">Recommended</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        <div class="tip-icon">💡</div>
+        <div>You do not need to use any special format. Just write the process as you would explain it to a colleague. I will extract the structure, identify the roles, and map the flow automatically.</div>
+      </div>
+    </div>
+
+    <!-- PROMPT TEMPLATE -->
+    <div class="section" id="prompt-template">
+      <div class="section-label">04 — Prompt Template</div>
+      <h2>Prompt template to use</h2>
+      <p>You can use this template each time you want a new flowchart. Fill in your process details where indicated.</p>
+
+      <div class="prompt-box">
+        <div class="prompt-box-header">
+          <div class="prompt-dots">
+            <div class="prompt-dot" style="background:#FF5F57"></div>
+            <div class="prompt-dot" style="background:#FFBD2E"></div>
+            <div class="prompt-dot" style="background:#28C840"></div>
+          </div>
+          <span>Your message to Claude</span>
+        </div>
+        <div class="prompt-body"><span class="highlight">PROCESS NAME:</span> <span class="green">[Name of the process]</span>
+<span class="highlight">DEPARTMENT:</span>   <span class="green">[Department or team name]</span>
+
+<span class="highlight">ROLES INVOLVED:</span>
+<span class="muted">- [Person 1 Name] ([Their Role/Title])
+- [Person 2 Name] ([Their Role/Title])
+- [Person 3 Name] ([Their Role/Title])</span>
+
+<span class="highlight">PROCESS DESCRIPTION:</span>
+<span class="muted">[Write the process here in plain language.
+Describe who does what, in what order,
+what decisions are made, and any special rules.]</span>
+
+<span class="highlight">SPECIAL NOTES:</span>
+<span class="muted">[Any warnings, exceptions, or important rules
+that should be highlighted in the flowchart.]</span>
+
+<span class="highlight">REPORTS / OUTPUTS:</span>
+<span class="muted">[Any reports or documents the process produces.]</span>
+
+<span class="green">Please create an HTML flowchart for this process.</span></div>
+      </div>
+
+      <div class="info">
+        <div class="tip-icon">ℹ️</div>
+        <div>The template above is a guide, not a strict requirement. You can also just describe the process in paragraph form — as you did for the Purchase Department — and I will structure it into a flowchart automatically.</div>
+      </div>
+    </div>
+
+    <!-- EXAMPLE PROMPT -->
+    <div class="section" id="example-prompt">
+      <div class="section-label">05 — Example</div>
+      <h2>Example of a good prompt</h2>
+      <p>Here is the style of description that produces the best results, based on the Purchase Department example you already used.</p>
+
+      <div class="example-block">
+        <div class="example-block-header">✅ &nbsp; Good example — Purchase Department prompt</div>
+        <div class="example-block-body">
+          <strong>Purchase Department:</strong> Purchase Order will be created by Purchaser (Raza) and for that if new inventory item is to be added, that would also be added by Raza. The PO would then be approved by Mr. Shahid (Business Partner) in software and then the purchasing can be done by Raza. Once stock will be received by Waqas (Store Manager) he will copy the approved purchase order to a new purchase invoice against which stock is received. After that, the purchase invoice entered in the system should be printed and attached with bill provided by supplier in physical file by Waqas. The rate should be same as on purchase invoice/bill received from supplier, not necessarily same as it was initially estimated on purchase order. The accounts department (Numan) will check the entire work done by Raza and Waqas closely — whether the inventory item is created correctly, quantity and rate is matched with Purchase Order or not, whether the PO was approved against which purchase made — and will share daily Purchase order reports. The purchase orders report will include: Pending Purchase Orders, Completed Purchase Orders, and a Discrepancy Report for completed orders where invoice price was higher than approved PO price.
+        </div>
+      </div>
+
+      <div class="tip">
+        <div class="tip-icon">✅</div>
+        <div>Notice: this prompt names each person with their role in brackets, describes the flow in sequence, mentions the decision point (approval), states the special rule (rate may differ), and describes the final report. That's all I need.</div>
+      </div>
+    </div>
+
+    <!-- DELIVERABLES -->
+    <div class="section" id="deliverables">
+      <div class="section-label">06 — Output</div>
+      <h2>What you will receive</h2>
+      <p>Every flowchart I create for you includes the following components as standard.</p>
+
+      <div class="deliverable-list">
+        <div class="deliverable-item">
+          <div class="deliverable-icon">🏊</div>
+          <div>
+            <strong>Color-coded swim lanes — one per role</strong>
+            Each person or team gets their own vertical lane with a unique color. Responsibilities never overlap visually.
+          </div>
+        </div>
+        <div class="deliverable-item">
+          <div class="deliverable-icon">📦</div>
+          <div>
+            <strong>Numbered step cards</strong>
+            Every action in the process is a clearly labeled card with a step number, title, and description inside the correct person's lane.
+          </div>
+        </div>
+        <div class="deliverable-item">
+          <div class="deliverable-icon">◆</div>
+          <div>
+            <strong>Decision diamonds</strong>
+            Approval gates and yes/no branches are shown as decision nodes with YES/NO path indicators clearly labeled.
+          </div>
+        </div>
+        <div class="deliverable-item">
+          <div class="deliverable-icon">↔️</div>
+          <div>
+            <strong>Cross-lane connectors</strong>
+            When a step passes from one person to another, a labeled connector arrow shows the handoff clearly.
+          </div>
+        </div>
+        <div class="deliverable-item">
+          <div class="deliverable-icon">⚠️</div>
+          <div>
+            <strong>Warning / note banners</strong>
+            Any special rules, exceptions, or important constraints are highlighted in an amber warning banner.
+          </div>
+        </div>
+        <div class="deliverable-item">
+          <div class="deliverable-icon">📊</div>
+          <div>
+            <strong>Reports & outputs section</strong>
+            If the process produces any reports or documents, they are shown in a dedicated section at the bottom.
+          </div>
+        </div>
+        <div class="deliverable-item">
+          <div class="deliverable-icon">💾</div>
+          <div>
+            <strong>Downloadable .html file</strong>
+            A single self-contained file you can open in any browser, print, share, or open in a text editor to edit.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DESIGN SYSTEM -->
+    <div class="section" id="design">
+      <div class="section-label">07 — Design</div>
+      <h2>Color assignment system</h2>
+      <p>Colors are assigned automatically to roles in the order they appear in your process description. The first role gets purple, the second blue, the third teal, and so on. The accounts/audit role always gets red when present.</p>
+
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="swatch-top" style="background:#6C3FB5;">🟣</div>
+          <div class="swatch-body">
+            <div class="swatch-role">Role 1</div>
+            <div class="swatch-desc">Purple — primary actor</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-top" style="background:#1A56DB;">🔵</div>
+          <div class="swatch-body">
+            <div class="swatch-role">Role 2</div>
+            <div class="swatch-desc">Blue — approver / reviewer</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-top" style="background:#0D9373;">🟢</div>
+          <div class="swatch-body">
+            <div class="swatch-role">Role 3</div>
+            <div class="swatch-desc">Teal — receiver / executor</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-top" style="background:#C0392B;">🔴</div>
+          <div class="swatch-body">
+            <div class="swatch-role">Audit / Accounts</div>
+            <div class="swatch-desc">Red — oversight role</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip" style="margin-top:16px;">
+        <div class="tip-icon">🎨</div>
+        <div>If you have more than 3 roles (excluding audit), I will assign additional colors automatically. You can also request a specific color for a specific role in your prompt.</div>
+      </div>
+    </div>
+
+    <!-- RULES -->
+    <div class="section" id="rules">
+      <div class="section-label">08 — Standards</div>
+      <h2>Rules & standards I follow</h2>
+      <p>Every flowchart I create follows these standards consistently to ensure quality and usability.</p>
+
+      <table class="rules-table">
+        <thead>
+          <tr>
+            <th>Standard</th>
+            <th>How it's applied</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>One lane per role</strong></td>
+            <td>Every named person or team in the process gets their own vertical swim lane. No role shares a lane.</td>
+          </tr>
+          <tr>
+            <td><strong>Steps numbered sequentially</strong></td>
+            <td>Steps are numbered 01, 02, 03… in the order they occur in the process, regardless of which lane they appear in.</td>
+          </tr>
+          <tr>
+            <td><strong>Decisions shown clearly</strong></td>
+            <td>Every yes/no gate is shown as a dashed-border decision card with explicit YES and NO badges and path descriptions.</td>
+          </tr>
+          <tr>
+            <td><strong>Rejection loops shown</strong></td>
+            <td>If a step can be rejected and returned to a previous actor, this loop is shown with a distinct red dashed visual indicator.</td>
+          </tr>
+          <tr>
+            <td><strong>Cross-role handoffs labeled</strong></td>
+            <td>When a task passes from one person to another, the connecting element includes a short label describing what is being handed over.</td>
+          </tr>
+          <tr>
+            <td><strong>Special rules highlighted</strong></td>
+            <td>Any important constraint, exception, or rule is shown in an amber warning banner, never buried in step text.</td>
+          </tr>
+          <tr>
+            <td><strong>Audit/oversight at the bottom</strong></td>
+            <td>If an accounts or oversight role reviews the entire process, their section spans the full width at the bottom of the chart.</td>
+          </tr>
+          <tr>
+            <td><strong>Print-ready output</strong></td>
+            <td>The HTML file includes print styles so it renders cleanly when printed from the browser or saved as PDF.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- QUICK REFERENCE -->
+    <div class="section" id="quick-ref">
+      <div class="section-label">09 — Quick Reference</div>
+      <h2>Quick reference summary</h2>
+
+      <div class="quick-ref">
+        <h3>Everything you need to remember</h3>
+        <ul>
+          <li>Describe any process in plain language — no special format needed</li>
+          <li>Name each person with their role in brackets, e.g. "Raza (Purchaser)"</li>
+          <li>Mention decision points explicitly — "If approved… if not…"</li>
+          <li>Include any important rules or exceptions as special notes</li>
+          <li>Mention any reports or documents the process produces</li>
+          <li>End your message with: <em style="color:#C4B2F0">"Please create an HTML flowchart for this process."</em></li>
+          <li>You will receive a downloadable .html file — open in any browser</li>
+          <li>Ask for corrections anytime — I will update and regenerate the file</li>
+          <li>You can also ask for a PDF, Word doc, or inline visual preview</li>
+          <li>For complex processes, describe one sub-process at a time for clarity</li>
+        </ul>
+      </div>
+
+      <div class="info" style="margin-top:20px;">
+        <div class="tip-icon">📌</div>
+        <div><strong>Save this file.</strong> Keep this instructions page as your reference. Whenever you want a new flowchart, re-read the prompt template in Section 04 and describe your process in the same style as the Purchase Department example in Section 05.</div>
+      </div>
+    </div>
+
+  </div><!-- end .content -->
+
+  <div class="footer" style="margin-left:0; padding: 20px 64px; font-family:'DM Mono',monospace; font-size:10.5px; color:var(--ink-soft); border-top:1px solid var(--border); background:var(--surface);">
+    Process Flowchart Project — Instructions v1.0 &nbsp;·&nbsp; Describe any process → receive a beautiful HTML flowchart
+  </div>
+
+</div><!-- end .main -->
+
+<script>
+  // Active nav link on scroll
+  const sections = document.querySelectorAll('.section[id]');
+  const links = document.querySelectorAll('.nav-link');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
